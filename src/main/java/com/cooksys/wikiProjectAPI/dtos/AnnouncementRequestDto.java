@@ -10,6 +10,6 @@ public class AnnouncementRequestDto {
   private String title;
   private String message;
   private Timestamp date;
-  private CompanyRequestDto company;
-  private UserRequestDto author;
+  private Long companyId;
+  private Long authorId;
 }
