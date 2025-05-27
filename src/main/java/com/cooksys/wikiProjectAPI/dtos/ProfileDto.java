@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ProfileDto {
-  private String firstName;
-  private String lastName;
+  private String first;
+  private String last;
 
   @NotNull(message = "Email cannot be null")
   @Email(message = "Please enter a valid email address")
