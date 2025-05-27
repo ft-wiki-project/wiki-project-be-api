@@ -1,13 +1,9 @@
 package com.cooksys.wikiProjectAPI;
-
-import java.util.List;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import com.cooksys.wikiProjectAPI.embeddables.Credentials;
 import com.cooksys.wikiProjectAPI.embeddables.Profile;
 import com.cooksys.wikiProjectAPI.entities.Company;
-import com.cooksys.wikiProjectAPI.entities.Team;
 import com.cooksys.wikiProjectAPI.entities.User;
 import com.cooksys.wikiProjectAPI.repositories.CompanyRepository;
 import com.cooksys.wikiProjectAPI.repositories.UserRepository;
