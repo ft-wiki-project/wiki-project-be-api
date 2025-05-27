@@ -28,8 +28,8 @@ public class Company {
   private List<User> users = new ArrayList<>();
 
   @OneToMany(mappedBy = "company")
-  private List<Team> teams;
+  private List<Team> teams = new ArrayList<>();
 
   @OneToMany(mappedBy = "company")
-  private List<Announcement> announcements;
+  private List<Announcement> announcements = new ArrayList<>();
 }
