@@ -11,5 +11,4 @@ public class AnnouncementResponseDto {
   private String message;
   private Timestamp date;
   private UserResponseDto author;
-  private CompanyResponseDto company;
 }
