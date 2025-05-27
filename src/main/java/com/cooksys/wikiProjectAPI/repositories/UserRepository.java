@@ -9,5 +9,9 @@ import com.cooksys.wikiProjectAPI.entities.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findByCredentialsUsernameAndCredentialsPassword(String username, String password);
+ 
+  boolean existsByCredentialsUsername(String username); 
+  boolean existsByProfileEmail(String email);           
+
 
 }
