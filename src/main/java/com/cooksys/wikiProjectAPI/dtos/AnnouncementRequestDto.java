@@ -1,4 +1,6 @@
 package com.cooksys.wikiProjectAPI.dtos;
+import java.sql.Timestamp;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 public class AnnouncementRequestDto {
   private String title;
   private String message;
+  private Timestamp date;
   private CompanyRequestDto company;
   private UserRequestDto author;
 }
