@@ -1,5 +1,9 @@
 package com.cooksys.wikiProjectAPI.entities;
 
+import java.security.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -11,11 +15,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Company {
+public class Announcement {
   @Id
   @GeneratedValue
   private Long id;
 
-  private String name;
-  private String description;
+  @CreationTimestamp
+  private Timestamp date;
+
+  private String title;
+  
+  private String message;
 }
