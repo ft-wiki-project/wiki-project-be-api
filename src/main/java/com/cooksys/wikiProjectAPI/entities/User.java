@@ -47,4 +47,12 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "team_id")
   )
   private List<Team> teams = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(
+    name = "user_company",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "company_id")
+  )
+  private List<Company> companies = new ArrayList<>();
 }
