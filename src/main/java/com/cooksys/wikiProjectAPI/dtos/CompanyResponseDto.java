@@ -12,5 +12,4 @@ public class CompanyResponseDto {
   private String description;
   private List<UserResponseDto> users;
   private List<TeamResponseDto> teams;
-  private List<AnnouncementResponseDto> announcements;
 }
