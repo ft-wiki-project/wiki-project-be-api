@@ -44,6 +44,9 @@ public class Seeder implements CommandLineRunner {
     worker.setActive(true);
     worker.setAdmin(false);
     worker.setStatus("ACTIVE");
+    worker.getCompanies().add(company1);
+    company1.getUsers().add(worker);
+    companyRepository.saveAndFlush(company1);
     userRepository.saveAndFlush(worker);
     
     User admin = new User();
