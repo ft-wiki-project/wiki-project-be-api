@@ -13,5 +13,5 @@ public class UserResponseDto {
   private String active;
   private List<ProjectResponseDto> projects;
   private List<TeamResponseDto> teams;
-  private List<CompanyResponseDto> companies;
+  // private List<CompanyResponseDto> companies;
 }
