@@ -1,5 +1,9 @@
 package com.cooksys.wikiProjectAPI.entities;
 
+import com.cooksys.wikiProjectAPI.embeddables.Credentials;
+import com.cooksys.wikiProjectAPI.embeddables.Profile;
+
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,5 +21,11 @@ public class User {
 
   private boolean admin = false;
 
-  private String status;
+  private String status = "PENDING";
+
+  @Embedded
+  private Profile profile;
+
+  @Embedded
+  private Credentials credentials;
 }
