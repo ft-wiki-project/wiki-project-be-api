@@ -56,7 +56,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
       throw new BadRequestException("Invalid announcement request");
     }
 
-    // get the company by ID to ensure it exists
     Optional<Company> companyOptional = companyRepository.findById(companyId);
     if (companyOptional.isEmpty()) {
       throw new NotFoundException("Company with ID: " + companyId + " not found");
