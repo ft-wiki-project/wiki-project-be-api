@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class TeamRequestDto {
   private String name;
   private String description;
-  private List<UserRequestDto> users;
-  private CompanyRequestDto company;
+  private List<Long> userIds;
+  private Long companyId;
 }
