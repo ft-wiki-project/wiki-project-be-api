@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponseDto {
   private String username;
+  private Long id;
   private ProfileDto profile;
   private String status;
   private String admin;
