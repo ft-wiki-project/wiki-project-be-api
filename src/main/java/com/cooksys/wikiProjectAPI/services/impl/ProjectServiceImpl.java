@@ -17,37 +17,76 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
-  private final ProjectRepository projectRepository;
-  private final ProjectMapper projectMapper;
-  private final TeamRepository teamRepository;
+	private final ProjectRepository projectRepository;
+	private final ProjectMapper projectMapper;
+	private final TeamRepository teamRepository;
 
-  @Override
-  public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) {
-    if (projectRequestDto == null) {
-      throw new BadRequestException("Project request cannot be null");
-    }
-    if (projectRequestDto.getName() == null || projectRequestDto.getName().isEmpty()) {
-      throw new BadRequestException("Project name cannot be null or empty");
-    }
-    if (projectRequestDto.getDescription() == null || projectRequestDto.getDescription().isEmpty()) {
-      throw new BadRequestException("Project description cannot be null or empty");
-    }
-    if (projectRequestDto.getTeamId() == null) {
-      throw new BadRequestException("Project team cannot be null or empty");
-    }
+	@Override
+	public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) {
+		if (projectRequestDto == null) {
+			throw new BadRequestException("Project request cannot be null");
+		}
+		if (projectRequestDto.getName() == null || projectRequestDto.getName().isEmpty()) {
+			throw new BadRequestException("Project name cannot be null or empty");
+		}
+		if (projectRequestDto.getDescription() == null || projectRequestDto.getDescription().isEmpty()) {
+			throw new BadRequestException("Project description cannot be null or empty");
+		}
+		if (projectRequestDto.getTeamId() == null) {
+			throw new BadRequestException("Project team cannot be null or empty");
+		}
 
-    Optional<Team> teamOptional = teamRepository.findById(projectRequestDto.getTeamId());
-    if (teamOptional.isEmpty()) {
-      throw new BadRequestException("Team with ID " + projectRequestDto.getTeamId() + " does not exist");
-    }
+		Optional<Team> teamOptional = teamRepository.findById(projectRequestDto.getTeamId());
+		if (teamOptional.isEmpty()) {
+			throw new BadRequestException("Team with ID " + projectRequestDto.getTeamId() + " does not exist");
+		}
 
-    Project projectToSave = projectMapper.requestDtoToEntity(projectRequestDto);
+		Project projectToSave = projectMapper.requestDtoToEntity(projectRequestDto);
 
-    projectToSave.setTeam(teamOptional.get());
-    projectToSave.setName(projectRequestDto.getName());
-    projectToSave.setDescription(projectRequestDto.getDescription());
+		projectToSave.setTeam(teamOptional.get());
+		projectToSave.setName(projectRequestDto.getName());
+		projectToSave.setDescription(projectRequestDto.getDescription());
 
-    return projectMapper.entityToDto(projectRepository.saveAndFlush(projectToSave));
-  }
+		return projectMapper.entityToDto(projectRepository.saveAndFlush(projectToSave));
+	}
+
+	@Override
+	public ProjectResponseDto editProject(ProjectRequestDto projectRequestDto, Long projectId) {
+		
+		if (projectId == null) {
+			throw new BadRequestException("Invalid Project Id");
+		}
+		
+		if (projectRequestDto.getName() == null && projectRequestDto.getDescription() == null) {
+			throw new BadRequestException("Please provide a name or a description");
+
+		}
+		
+		Optional<Project> project = projectRepository.findById(projectId);
+		if (project == null) {
+			throw new BadRequestException("Project Does not exsist");
+		}
+		
+		if (projectRequestDto.getName() != null) {
+			project.get().setName(projectRequestDto.getName());
+			projectRepository.saveAndFlush(project.get());
+		}
+		
+		if (projectRequestDto.getDescription() != null) {
+			project.get().setDescription(projectRequestDto.getDescription());
+			projectRepository.saveAndFlush(project.get());
+		}
+		
+		if (projectRequestDto.getName() != null && projectRequestDto.getDescription() != null) {
+			project.get().setName(projectRequestDto.getName());
+			project.get().setDescription(projectRequestDto.getDescription());
+			projectRepository.saveAndFlush(project.get());
+		}
+		
+		
+		return projectMapper.entityToDto(project.get());
+
+		
+	}
 
 }
