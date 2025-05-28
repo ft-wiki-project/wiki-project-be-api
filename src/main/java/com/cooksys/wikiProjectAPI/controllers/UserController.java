@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
   private final UserService userService;
 
-  @PostMapping("/users")
+  @PostMapping("/")
   public UserResponseDto createUser(@RequestBody UserRequestDto request) {
 	  return userService.createUser(request);
 

@@ -1,8 +1,7 @@
 package com.cooksys.wikiProjectAPI.services.impl;
 import java.util.Optional;
 
-
-
+import org.apache.coyote.http11.upgrade.UpgradeServletInputStream;
 import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties.Credential;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +13,7 @@ import com.cooksys.wikiProjectAPI.exceptions.BadRequestException;
 import com.cooksys.wikiProjectAPI.mappers.UserMapper;
 import com.cooksys.wikiProjectAPI.repositories.UserRepository;
 import com.cooksys.wikiProjectAPI.services.UserService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,43 +44,32 @@ public class UserServiceImpl implements UserService {
 
 @Override
 public UserResponseDto createUser(UserRequestDto request) {
-	
-	if (request == null || request.getCredentials() == null || request.getProfile() == null) {
-	    throw new BadRequestException("User must have credentials and profile information");
-	  }
+    if (request == null || request.getProfile() == null || request.getCredentials() == null) {
+        throw new BadRequestException("User must have credentials and profile information");
+    }
 
-	  String username = request.getCredentials().getUsername();
-	  String email = request.getProfile().getEmail();
+    String email = request.getProfile().getEmail();
 
-	  if (username == null || username.isBlank() || request.getCredentials().getPassword() == null) {
-	    throw new BadRequestException("Username and password are required");
-	  }
+    if (email == null || email.isBlank()) {
+        throw new BadRequestException("Email is required");
+    }
 
-	  if (email == null || email.isBlank()) {
-	    throw new BadRequestException("Email is required");
-	  }
+    if (userRepository.findByProfileEmail(email).isPresent()) {
+        throw new BadRequestException("Email already exists");
+    }
 
-	  if (userRepository.existsByCredentialsUsername(username)) {
-		    throw new BadRequestException("Username already exists");
-		}
+	if(userRepository.findByCredentialsUsername(request.getCredentials().getUsername()).isPresent()) {
+		throw new BadRequestException("Username already exists");
+	}
 
-		if (userRepository.existsByProfileEmail(email)) {
-		    throw new BadRequestException("Email already exists");
-		}
+    User user = userMapper.requestDtoToEntity(request);
 
+    user.setActive(true);
+    user.setStatus("PENDING");
 
-
-	  User user = userMapper.requestDtoToEntity(request);
-	  user.setActive(true);         
-	  user.setStatus("ACTIVE");     
-
-
-	  
-	  user = userRepository.save(user);
-
-	
-	  return userMapper.entityToDto(user);
+    return userMapper.entityToDto(userRepository.saveAndFlush(user));
 }
+
 
 
 
