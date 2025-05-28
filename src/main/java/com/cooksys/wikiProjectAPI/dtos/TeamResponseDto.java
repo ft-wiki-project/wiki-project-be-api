@@ -10,4 +10,5 @@ public class TeamResponseDto {
   private String name;
   private String description;
   private List<ProjectResponseDto> projects;
+  private List<UserResponseDto> users;
 }
