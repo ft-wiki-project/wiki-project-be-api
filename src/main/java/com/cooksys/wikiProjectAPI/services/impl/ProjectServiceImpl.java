@@ -1,4 +1,5 @@
 package com.cooksys.wikiProjectAPI.services.impl;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import com.cooksys.wikiProjectAPI.dtos.ProjectResponseDto;
 import com.cooksys.wikiProjectAPI.entities.Project;
 import com.cooksys.wikiProjectAPI.entities.Team;
 import com.cooksys.wikiProjectAPI.exceptions.BadRequestException;
+import com.cooksys.wikiProjectAPI.exceptions.NotFoundException;
 import com.cooksys.wikiProjectAPI.mappers.ProjectMapper;
 import com.cooksys.wikiProjectAPI.repositories.ProjectRepository;
 import com.cooksys.wikiProjectAPI.repositories.TeamRepository;
@@ -49,5 +51,24 @@ public class ProjectServiceImpl implements ProjectService {
 
     return projectMapper.entityToDto(projectRepository.saveAndFlush(projectToSave));
   }
+
+	@Override
+	public List<ProjectResponseDto> getProjectsByTeamId(Long teamId) {
+		if (teamId == null) {
+      throw new BadRequestException("Team ID cannot be null");
+    }
+
+    Optional<Team> teamOptional = teamRepository.findById(teamId);
+    if (teamOptional.isEmpty()) {
+      throw new BadRequestException("Team with ID " + teamId + " does not exist");
+    }
+
+    List<Project> projects = projectRepository.findByTeam(teamOptional.get());
+    if (projects.isEmpty()) {
+      throw new NotFoundException("No projects found for team with ID " + teamId);
+    }
+    
+    return projectMapper.entitiesToDtos(projects);
+	}
 
 }
