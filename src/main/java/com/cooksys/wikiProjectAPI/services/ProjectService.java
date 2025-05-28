@@ -9,6 +9,7 @@ public interface ProjectService {
 
   ProjectResponseDto createProject(ProjectRequestDto projectRequestDto);
 
+  ProjectResponseDto editProject(ProjectRequestDto projectRequestDto, Long projectId);
+  
   List<ProjectResponseDto> getProjectsByTeamId(Long teamId);
-
 }
