@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.wikiProjectAPI.dtos.CompanyResponseDto;
+import com.cooksys.wikiProjectAPI.dtos.UserResponseDto;
 import com.cooksys.wikiProjectAPI.services.CompanyService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,11 @@ public class CompanyController {
 	@GetMapping("/{userId}")
 	public List<CompanyResponseDto> getCompanies(@PathVariable Long userId) {
 		return companyService.getCompaines(userId);
+	}
+	
+	@GetMapping("/{companyId}/users")
+	public List<UserResponseDto> getAllUsers(@PathVariable Long companyId) {
+		return companyService.getAllUsers(companyId);
 	}
 
 }
