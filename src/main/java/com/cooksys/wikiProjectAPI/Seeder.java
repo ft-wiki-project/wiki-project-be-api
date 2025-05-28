@@ -5,20 +5,30 @@ import com.cooksys.wikiProjectAPI.embeddables.Credentials;
 import com.cooksys.wikiProjectAPI.embeddables.Profile;
 import com.cooksys.wikiProjectAPI.entities.Announcement;
 import com.cooksys.wikiProjectAPI.entities.Company;
+import com.cooksys.wikiProjectAPI.entities.Project;
+import com.cooksys.wikiProjectAPI.entities.Team;
 import com.cooksys.wikiProjectAPI.entities.User;
 import com.cooksys.wikiProjectAPI.repositories.AnnouncementRepository;
 import com.cooksys.wikiProjectAPI.repositories.CompanyRepository;
+import com.cooksys.wikiProjectAPI.repositories.ProjectRepository;
+import com.cooksys.wikiProjectAPI.repositories.TeamRepository;
 import com.cooksys.wikiProjectAPI.repositories.UserRepository;
 @Component
 public class Seeder implements CommandLineRunner {
   private CompanyRepository companyRepository;
   private UserRepository userRepository;
   private AnnouncementRepository announcementRepository;
+  private TeamRepository teamRepository;
+  private ProjectRepository projectRepository;
+
   public Seeder(CompanyRepository companyRepository, UserRepository userRepository, 
-                AnnouncementRepository announcementRepository) {
+                AnnouncementRepository announcementRepository, TeamRepository teamRepository,
+                ProjectRepository projectRepository) {
     this.companyRepository = companyRepository;
     this.userRepository = userRepository;
     this.announcementRepository = announcementRepository;
+    this.teamRepository = teamRepository;
+    this.projectRepository = projectRepository;
   }
   @Override
   public void run(String... args) throws Exception {
@@ -117,6 +127,71 @@ public class Seeder implements CommandLineRunner {
     companyRepository.saveAndFlush(company1);
     userRepository.saveAndFlush(admin);
     announcementRepository.saveAndFlush(announcement3);
+
+    Team team1 = new Team();
+    team1.setName("Development Team");
+    team1.setDescription("This is the development team.");
+    team1.setCompany(company1);
+    team1.getUsers().add(worker);
+    team1.getUsers().add(workerJane);
+    company1.getTeams().add(team1);
+    worker.getTeams().add(team1);
+    workerJane.getTeams().add(team1);
+    teamRepository.saveAndFlush(team1);
+    companyRepository.saveAndFlush(company1);
+    userRepository.saveAndFlush(worker);
+    userRepository.saveAndFlush(workerJane);
+
+    Team team2 = new Team();
+    team2.setName("Design Team");
+    team2.setDescription("This is the design team.");
+    team2.setCompany(company1);
+    team2.getUsers().add(worker);
+    team2.getUsers().add(workerJane);
+    company1.getTeams().add(team2);
+    worker.getTeams().add(team2);
+    workerJane.getTeams().add(team2);
+    teamRepository.saveAndFlush(team2);
+    companyRepository.saveAndFlush(company1);
+    userRepository.saveAndFlush(worker);
+    userRepository.saveAndFlush(workerJane);
+
+    Project project1 = new Project();
+    project1.setName("Project Alpha");
+    project1.setDescription("This is the first project.");
+    project1.setActive(true);
+    project1.setTeam(team1);
+    team1.getProjects().add(project1);
+    projectRepository.saveAndFlush(project1);
+    teamRepository.saveAndFlush(team1);
+
+    Project project2 = new Project();
+    project2.setName("Project Beta");
+    project2.setDescription("This is the second project.");
+    project2.setActive(true);
+    project2.setTeam(team1);
+    team1.getProjects().add(project2);
+    projectRepository.saveAndFlush(project2);
+    teamRepository.saveAndFlush(team1);
+   
+    Project project3 = new Project();
+    project3.setName("Project Gamma");
+    project3.setDescription("This is the third project.");
+    project3.setActive(true);
+    project3.setTeam(team2);
+    team2.getProjects().add(project3);
+    projectRepository.saveAndFlush(project3);
+    teamRepository.saveAndFlush(team2);
+  
+    Project project4 = new Project();
+    project4.setName("Project Delta");
+    project4.setDescription("This is the fourth project.");
+    project4.setActive(true);
+    project4.setTeam(team1);
+    team1.getProjects().add(project4);
+    projectRepository.saveAndFlush(project4);
+    teamRepository.saveAndFlush(team1);
     
     System.out.println("Database seeded with initial data.");
-  }}
+  }
+}
