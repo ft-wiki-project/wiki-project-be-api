@@ -71,16 +71,29 @@ public class TeamServiceImpl implements TeamService {
 
 	@Override
 	public List<TeamResponseDto> getTeams(Long companyId) {
-		
+
 		if (companyId == null) {
 			throw new BadRequestException("Company does not exsist");
 		}
-		
+
 		Optional<Company> companyToFind = companyRepository.findById(companyId);
-		
+
 		List<Team> teamsInCompany = companyToFind.get().getTeams();
-		
+
 		return teamMapper.entitiesToDtos(teamsInCompany);
+
+	}
+
+	@Override
+	public List<TeamResponseDto> getTeamByUser(Long userId) {
+		if (userId == null) {
+			throw new BadRequestException("User does not exsist");
+		}
 		
+		Optional<User> userToFind = userRepository.findById(userId);
+		
+		List<Team> userTeams = userToFind.get().getTeams();
+		
+		return teamMapper.entitiesToDtos(userTeams);
 	}
 }
