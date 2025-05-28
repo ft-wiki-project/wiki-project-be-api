@@ -1,11 +1,13 @@
 package com.cooksys.wikiProjectAPI.controllers;
-
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.wikiProjectAPI.dtos.CompanyResponseDto;
 import com.cooksys.wikiProjectAPI.dtos.CredentialsDto;
 import com.cooksys.wikiProjectAPI.dtos.UserRequestDto;
 import com.cooksys.wikiProjectAPI.dtos.UserResponseDto;
@@ -30,4 +32,7 @@ public class UserController {
   public UserResponseDto login(@RequestBody CredentialsDto credentialsDto) {
     return userService.login(credentialsDto);
   }
+  
+  
+  
 }
