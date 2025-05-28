@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class ProjectRequestDto {
   private String name;
   private String description;
-  private boolean active;
-  private Team team;
+  private Long teamId;
 }
