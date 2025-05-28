@@ -9,5 +9,4 @@ public class ProjectResponseDto {
   private String name;
   private String description;
   private boolean active;
-  private TeamResponseDto team;
 }

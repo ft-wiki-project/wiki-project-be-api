@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponseDto {
   private String username;
+  private Long id;
   private ProfileDto profile;
   private String status;
   private String admin;
   private String active;
   private List<ProjectResponseDto> projects;
-  private List<TeamResponseDto> teams;
   private List<CompanyResponseDto> companies;
 }

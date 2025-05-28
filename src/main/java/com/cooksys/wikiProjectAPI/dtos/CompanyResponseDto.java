@@ -10,6 +10,4 @@ public class CompanyResponseDto {
   private Long id;
   private String name;
   private String description;
-  private List<UserResponseDto> users;
-  private List<TeamResponseDto> teams;
 }

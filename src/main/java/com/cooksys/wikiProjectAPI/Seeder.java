@@ -34,9 +34,9 @@ public class Seeder implements CommandLineRunner {
     
     User worker = new User();
     worker.setProfile(new Profile()); 
-    worker.getProfile().setFirst("Worker first");
-    worker.getProfile().setLast("Worker last");
-    worker.getProfile().setEmail("worker@worker.com");
+    worker.getProfile().setFirst("WorkerJoe");
+    worker.getProfile().setLast("Workersson");
+    worker.getProfile().setEmail("joe@worker.com");
     worker.getProfile().setPhone("000-000-0000");
     worker.setCredentials(new Credentials());
     worker.getCredentials().setUsername("test123");
@@ -44,12 +44,32 @@ public class Seeder implements CommandLineRunner {
     worker.setActive(true);
     worker.setAdmin(false);
     worker.setStatus("ACTIVE");
+    worker.getCompanies().add(company1);
+    company1.getUsers().add(worker);
+    companyRepository.saveAndFlush(company1);
     userRepository.saveAndFlush(worker);
+    
+    User workerJane = new User();
+    workerJane.setProfile(new Profile()); 
+    workerJane.getProfile().setFirst("WorkerJane");
+    workerJane.getProfile().setLast("Workersson");
+    workerJane.getProfile().setEmail("jane@worker.com");
+    workerJane.getProfile().setPhone("000-000-0000");
+    workerJane.setCredentials(new Credentials());
+    workerJane.getCredentials().setUsername("jane");
+    workerJane.getCredentials().setPassword("password");
+    workerJane.setActive(true);
+    workerJane.setAdmin(false);
+    workerJane.setStatus("ACTIVE");
+    workerJane.getCompanies().add(company1);
+    company1.getUsers().add(workerJane);
+    companyRepository.saveAndFlush(company1);
+    userRepository.saveAndFlush(workerJane);
     
     User admin = new User();
     admin.setProfile(new Profile());
-    admin.getProfile().setFirst("Admin first");
-    admin.getProfile().setLast("Admin last");
+    admin.getProfile().setFirst("AdminJoe");
+    admin.getProfile().setLast("Adminson");
     admin.getProfile().setEmail("admin@admin.com");
     admin.getProfile().setPhone("000-000-0000");
     admin.setCredentials(new Credentials());
