@@ -11,4 +11,6 @@ public interface TeamService {
   
   List<TeamResponseDto> getTeams(Long companyId);
 
+  List<TeamResponseDto> getTeamByUser(Long userId);
+
 }
