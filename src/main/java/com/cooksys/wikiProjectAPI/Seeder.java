@@ -3,17 +3,22 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import com.cooksys.wikiProjectAPI.embeddables.Credentials;
 import com.cooksys.wikiProjectAPI.embeddables.Profile;
+import com.cooksys.wikiProjectAPI.entities.Announcement;
 import com.cooksys.wikiProjectAPI.entities.Company;
 import com.cooksys.wikiProjectAPI.entities.User;
+import com.cooksys.wikiProjectAPI.repositories.AnnouncementRepository;
 import com.cooksys.wikiProjectAPI.repositories.CompanyRepository;
 import com.cooksys.wikiProjectAPI.repositories.UserRepository;
 @Component
 public class Seeder implements CommandLineRunner {
   private CompanyRepository companyRepository;
   private UserRepository userRepository;
-  public Seeder(CompanyRepository companyRepository, UserRepository userRepository) {
+  private AnnouncementRepository announcementRepository;
+  public Seeder(CompanyRepository companyRepository, UserRepository userRepository, 
+                AnnouncementRepository announcementRepository) {
     this.companyRepository = companyRepository;
     this.userRepository = userRepository;
+    this.announcementRepository = announcementRepository;
   }
   @Override
   public void run(String... args) throws Exception {
@@ -79,6 +84,39 @@ public class Seeder implements CommandLineRunner {
     admin.setAdmin(true);
     admin.setStatus("ACTIVE");
     userRepository.saveAndFlush(admin);
+
+    Announcement announcement1 = new Announcement();
+    announcement1.setTitle("Welcome to the company!");
+    announcement1.setMessage("We are excited to have you on board.");
+    announcement1.setCompany(company1);
+    announcement1.setAuthor(admin);
+    company1.getAnnouncements().add(announcement1);
+    admin.getAnnouncements().add(announcement1);
+    companyRepository.saveAndFlush(company1);
+    userRepository.saveAndFlush(admin);
+    announcementRepository.saveAndFlush(announcement1);
+
+    Announcement announcement2 = new Announcement();
+    announcement2.setTitle("Company Meeting");
+    announcement2.setMessage("There will be a company meeting next week.");
+    announcement2.setCompany(company1);
+    announcement2.setAuthor(admin);
+    company1.getAnnouncements().add(announcement2);
+    admin.getAnnouncements().add(announcement2);
+    companyRepository.saveAndFlush(company1);
+    userRepository.saveAndFlush(admin);
+    announcementRepository.saveAndFlush(announcement2);
+
+    Announcement announcement3 = new Announcement();
+    announcement3.setTitle("Holiday Schedule");
+    announcement3.setMessage("The holiday schedule has been released.");
+    announcement3.setCompany(company1);
+    announcement3.setAuthor(admin);
+    company1.getAnnouncements().add(announcement3);
+    admin.getAnnouncements().add(announcement3);
+    companyRepository.saveAndFlush(company1);
+    userRepository.saveAndFlush(admin);
+    announcementRepository.saveAndFlush(announcement3);
     
     System.out.println("Database seeded with initial data.");
   }}
