@@ -1,5 +1,7 @@
 package com.cooksys.wikiProjectAPI.controllers;
 import org.springframework.web.bind.annotation.PatchMapping;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,5 +31,9 @@ public class ProjectController {
 	  return projectService.editProject(projectRequestDto, projectId);
   }
   
+  @GetMapping("/{teamId}")
+  public List<ProjectResponseDto> getProjectsByTeamId(@PathVariable Long teamId) {
+    return projectService.getProjectsByTeamId(teamId);
+  }
 
-} 
+}
