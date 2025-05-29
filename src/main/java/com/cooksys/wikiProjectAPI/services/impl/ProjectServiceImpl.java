@@ -85,7 +85,7 @@ public class ProjectServiceImpl implements ProjectService {
 			projectRepository.saveAndFlush(project.get());
 		}
 
-		if (projectRequestDto.isActive()) {
+		if (projectRequestDto.isActive() != project.get().isActive()) {
 			project.get().setActive(projectRequestDto.isActive());
 			projectRepository.saveAndFlush(project.get());
 		}
