@@ -10,4 +10,5 @@ public class UserRequestDto {
   private String status;
   private boolean admin;
   private boolean active;
+  private Long companyId;
 }

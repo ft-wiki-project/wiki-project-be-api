@@ -58,7 +58,7 @@ public class Seeder implements CommandLineRunner {
     worker.getCredentials().setPassword("password123");
     worker.setActive(true);
     worker.setAdmin(false);
-    worker.setStatus("ACTIVE");
+    worker.setStatus("JOINED");
     worker.getCompanies().add(company1);
     company1.getUsers().add(worker);
     companyRepository.saveAndFlush(company1);
@@ -75,7 +75,7 @@ public class Seeder implements CommandLineRunner {
     worker2.getCredentials().setPassword("password123");
     worker2.setActive(true);
     worker2.setAdmin(false);
-    worker2.setStatus("ACTIVE");
+    worker2.setStatus("JOINED");
     worker2.getCompanies().add(company2);
     company2.getUsers().add(worker2);
     companyRepository.saveAndFlush(company2);
@@ -92,7 +92,7 @@ public class Seeder implements CommandLineRunner {
     workerJane.getCredentials().setPassword("password");
     workerJane.setActive(true);
     workerJane.setAdmin(false);
-    workerJane.setStatus("ACTIVE");
+    workerJane.setStatus("JOINED");
     workerJane.getCompanies().add(company1);
     company1.getUsers().add(workerJane);
     companyRepository.saveAndFlush(company1);
@@ -109,7 +109,7 @@ public class Seeder implements CommandLineRunner {
     admin.getCredentials().setPassword("password");
     admin.setActive(true);
     admin.setAdmin(true);
-    admin.setStatus("ACTIVE");
+    admin.setStatus("JOINED");
     admin.getCompanies().add(company1);
     admin.getCompanies().add(company2);
     admin.getCompanies().add(company3);
