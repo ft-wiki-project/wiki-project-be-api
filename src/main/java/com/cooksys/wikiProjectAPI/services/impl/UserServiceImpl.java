@@ -1,16 +1,15 @@
 package com.cooksys.wikiProjectAPI.services.impl;
 import java.util.Optional;
-
-import org.apache.coyote.http11.upgrade.UpgradeServletInputStream;
-import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties.Credential;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.wikiProjectAPI.dtos.CredentialsDto;
 import com.cooksys.wikiProjectAPI.dtos.UserRequestDto;
 import com.cooksys.wikiProjectAPI.dtos.UserResponseDto;
 import com.cooksys.wikiProjectAPI.entities.User;
+import com.cooksys.wikiProjectAPI.entities.Company;
 import com.cooksys.wikiProjectAPI.exceptions.BadRequestException;
 import com.cooksys.wikiProjectAPI.mappers.UserMapper;
+import com.cooksys.wikiProjectAPI.repositories.CompanyRepository;
 import com.cooksys.wikiProjectAPI.repositories.UserRepository;
 import com.cooksys.wikiProjectAPI.services.UserService;
 
@@ -22,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final UserMapper userMapper;
+  private final CompanyRepository companyRepository;
   
   @Override
   public UserResponseDto login(CredentialsDto credentialsDto) {
@@ -42,36 +42,42 @@ public class UserServiceImpl implements UserService {
     return userMapper.entityToDto(user);
   }
 
-@Override
-public UserResponseDto createUser(UserRequestDto request) {
+  @Override
+  public UserResponseDto createUser(UserRequestDto request) {
     if (request == null || request.getProfile() == null || request.getCredentials() == null) {
-        throw new BadRequestException("User must have credentials and profile information");
+      throw new BadRequestException("User must have credentials and profile information");
     }
 
     String email = request.getProfile().getEmail();
 
     if (email == null || email.isBlank()) {
-        throw new BadRequestException("Email is required");
+      throw new BadRequestException("Email is required");
     }
 
     if (userRepository.findByProfileEmail(email).isPresent()) {
-        throw new BadRequestException("Email already exists");
+      throw new BadRequestException("Email already exists");
     }
 
-	if(userRepository.findByCredentialsUsername(request.getCredentials().getUsername()).isPresent()) {
-		throw new BadRequestException("Username already exists");
-	}
+    if(userRepository.findByCredentialsUsername(request.getCredentials().getUsername()).isPresent()) {
+      throw new BadRequestException("Username already exists");
+    }
+
+    if (request.getCompanyId() == null) {
+      throw new BadRequestException("Company ID cannot be null");
+    }
+
+    Optional<Company> companyOptional = companyRepository.findById(request.getCompanyId());
+
+    if (companyOptional.isEmpty()) {
+      throw new BadRequestException("Company with ID " + request.getCompanyId() + " does not exist");
+    }
 
     User user = userMapper.requestDtoToEntity(request);
 
+    user.getCompanies().add(companyOptional.get());
     user.setActive(true);
     user.setStatus("PENDING");
 
     return userMapper.entityToDto(userRepository.saveAndFlush(user));
-}
-
-
-
-
-
+  }
 }
