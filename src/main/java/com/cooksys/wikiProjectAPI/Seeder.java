@@ -49,7 +49,7 @@ public class Seeder implements CommandLineRunner {
     
     User worker = new User();
     worker.setProfile(new Profile()); 
-    worker.getProfile().setFirst("WorkerJoe");
+    worker.getProfile().setFirst("Worker1");
     worker.getProfile().setLast("Workersson");
     worker.getProfile().setEmail("joe@worker.com");
     worker.getProfile().setPhone("000-000-0000");
@@ -63,6 +63,23 @@ public class Seeder implements CommandLineRunner {
     company1.getUsers().add(worker);
     companyRepository.saveAndFlush(company1);
     userRepository.saveAndFlush(worker);
+    
+    User worker2 = new User();
+    worker2.setProfile(new Profile()); 
+    worker2.getProfile().setFirst("Worker2");
+    worker2.getProfile().setLast("Workersson");
+    worker2.getProfile().setEmail("worker2@worker.com");
+    worker2.getProfile().setPhone("000-000-0000");
+    worker2.setCredentials(new Credentials());
+    worker2.getCredentials().setUsername("test2");
+    worker2.getCredentials().setPassword("password123");
+    worker2.setActive(true);
+    worker2.setAdmin(false);
+    worker2.setStatus("ACTIVE");
+    worker2.getCompanies().add(company2);
+    company2.getUsers().add(worker2);
+    companyRepository.saveAndFlush(company2);
+    userRepository.saveAndFlush(worker2);
     
     User workerJane = new User();
     workerJane.setProfile(new Profile()); 
@@ -105,7 +122,7 @@ public class Seeder implements CommandLineRunner {
     userRepository.saveAndFlush(admin);
 
     Announcement announcement1 = new Announcement();
-    announcement1.setTitle("Welcome to the company!");
+    announcement1.setTitle("Tech Lead");
     announcement1.setMessage("We are excited to have you on board.");
     announcement1.setCompany(company1);
     announcement1.setAuthor(admin);
@@ -116,7 +133,7 @@ public class Seeder implements CommandLineRunner {
     announcementRepository.saveAndFlush(announcement1);
 
     Announcement announcement2 = new Announcement();
-    announcement2.setTitle("Company Meeting");
+    announcement2.setTitle("CFO");
     announcement2.setMessage("There will be a company meeting next week.");
     announcement2.setCompany(company1);
     announcement2.setAuthor(admin);
@@ -127,7 +144,7 @@ public class Seeder implements CommandLineRunner {
     announcementRepository.saveAndFlush(announcement2);
 
     Announcement announcement3 = new Announcement();
-    announcement3.setTitle("Holiday Schedule");
+    announcement3.setTitle("CEO");
     announcement3.setMessage("The holiday schedule has been released.");
     announcement3.setCompany(company1);
     announcement3.setAuthor(admin);
@@ -136,6 +153,17 @@ public class Seeder implements CommandLineRunner {
     companyRepository.saveAndFlush(company1);
     userRepository.saveAndFlush(admin);
     announcementRepository.saveAndFlush(announcement3);
+    
+    Announcement announcement4 = new Announcement();
+    announcement4.setTitle("CEO");
+    announcement4.setMessage("We are going to start implementing casual Fridays!!");
+    announcement4.setCompany(company2);
+    announcement4.setAuthor(admin);
+    company2.getAnnouncements().add(announcement4);
+    admin.getAnnouncements().add(announcement4);
+    companyRepository.saveAndFlush(company2);
+    userRepository.saveAndFlush(admin);
+    announcementRepository.saveAndFlush(announcement4);
 
     Team team1 = new Team();
     team1.setName("Development Team");
@@ -164,6 +192,17 @@ public class Seeder implements CommandLineRunner {
     companyRepository.saveAndFlush(company1);
     userRepository.saveAndFlush(worker);
     userRepository.saveAndFlush(workerJane);
+    
+    Team team3 = new Team();
+    team3.setName("IT Department");
+    team3.setDescription("Information Technology Department.");
+    team3.setCompany(company2);
+    team3.getUsers().add(worker2);
+    company2.getTeams().add(team3);
+    worker2.getTeams().add(team3);
+    teamRepository.saveAndFlush(team3);
+    companyRepository.saveAndFlush(company2);
+    userRepository.saveAndFlush(worker2);
 
     Project project1 = new Project();
     project1.setName("Project Alpha");
@@ -200,6 +239,15 @@ public class Seeder implements CommandLineRunner {
     team1.getProjects().add(project4);
     projectRepository.saveAndFlush(project4);
     teamRepository.saveAndFlush(team1);
+    
+    Project project5 = new Project();
+    project5.setName("New App");
+    project5.setDescription("Building a sweet new app!");
+    project5.setActive(true);
+    project5.setTeam(team3);
+    team3.getProjects().add(project5);
+    projectRepository.saveAndFlush(project5);
+    teamRepository.saveAndFlush(team3);
     
     System.out.println("Database seeded with initial data.");
   }
