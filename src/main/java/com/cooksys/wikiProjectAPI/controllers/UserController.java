@@ -1,5 +1,7 @@
 package com.cooksys.wikiProjectAPI.controllers;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,4 +31,9 @@ public class UserController {
   public UserResponseDto login(@RequestBody CredentialsDto credentialsDto) {
     return userService.login(credentialsDto);
   }
-}
+  
+  @PatchMapping("/{userId}")
+  public UserResponseDto updateUser(@PathVariable Long userId) {
+	  return userService.updateUser(userId);
+  }
+} 

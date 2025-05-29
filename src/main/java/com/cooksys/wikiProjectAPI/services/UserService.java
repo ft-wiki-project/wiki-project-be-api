@@ -9,7 +9,9 @@ import com.cooksys.wikiProjectAPI.repositories.UserRepository;
 
 public interface UserService {
 
-  UserResponseDto login(CredentialsDto credentialsDto);
+	UserResponseDto login(CredentialsDto credentialsDto);
 
-  UserResponseDto createUser(UserRequestDto request);
+	UserResponseDto createUser(UserRequestDto request);
+
+	UserResponseDto updateUser(Long userId);
 }

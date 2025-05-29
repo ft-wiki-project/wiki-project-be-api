@@ -8,6 +8,7 @@ import com.cooksys.wikiProjectAPI.dtos.UserResponseDto;
 import com.cooksys.wikiProjectAPI.entities.User;
 import com.cooksys.wikiProjectAPI.entities.Company;
 import com.cooksys.wikiProjectAPI.exceptions.BadRequestException;
+import com.cooksys.wikiProjectAPI.exceptions.NotFoundException;
 import com.cooksys.wikiProjectAPI.mappers.UserMapper;
 import com.cooksys.wikiProjectAPI.repositories.CompanyRepository;
 import com.cooksys.wikiProjectAPI.repositories.UserRepository;
@@ -19,65 +20,80 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-  private final UserRepository userRepository;
-  private final UserMapper userMapper;
-  private final CompanyRepository companyRepository;
-  
-  @Override
-  public UserResponseDto login(CredentialsDto credentialsDto) {
-    if (credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null) {
-      throw new BadRequestException("Invalid login request");
-    }
+	private final UserRepository userRepository;
+	private final UserMapper userMapper;
+	private final CompanyRepository companyRepository;
 
-    Optional<User> userToBeLoggedIn = userRepository.findByCredentialsUsernameAndCredentialsPassword(
-      credentialsDto.getUsername(),
-      credentialsDto.getPassword()
-    );
-    
-    if (userToBeLoggedIn.isEmpty()) {
-      throw new BadRequestException("Invalid username or password");
-    }
+	@Override
+	public UserResponseDto login(CredentialsDto credentialsDto) {
+		if (credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null) {
+			throw new BadRequestException("Invalid login request");
+		}
 
-    User user = userToBeLoggedIn.get();
-    return userMapper.entityToDto(user);
-  }
+		Optional<User> userToBeLoggedIn = userRepository.findByCredentialsUsernameAndCredentialsPassword(
+				credentialsDto.getUsername(), credentialsDto.getPassword());
 
-  @Override
-  public UserResponseDto createUser(UserRequestDto request) {
-    if (request == null || request.getProfile() == null || request.getCredentials() == null) {
-      throw new BadRequestException("User must have credentials and profile information");
-    }
+		if (userToBeLoggedIn.isEmpty()) {
+			throw new BadRequestException("Invalid username or password");
+		}
 
-    String email = request.getProfile().getEmail();
+		User user = userToBeLoggedIn.get();
+		return userMapper.entityToDto(user);
+	}
 
-    if (email == null || email.isBlank()) {
-      throw new BadRequestException("Email is required");
-    }
+	@Override
+	public UserResponseDto createUser(UserRequestDto request) {
+		if (request == null || request.getProfile() == null || request.getCredentials() == null) {
+			throw new BadRequestException("User must have credentials and profile information");
+		}
 
-    if (userRepository.findByProfileEmail(email).isPresent()) {
-      throw new BadRequestException("Email already exists");
-    }
+		String email = request.getProfile().getEmail();
 
-    if(userRepository.findByCredentialsUsername(request.getCredentials().getUsername()).isPresent()) {
-      throw new BadRequestException("Username already exists");
-    }
+		if (email == null || email.isBlank()) {
+			throw new BadRequestException("Email is required");
+		}
 
-    if (request.getCompanyId() == null) {
-      throw new BadRequestException("Company ID cannot be null");
-    }
+		if (userRepository.findByProfileEmail(email).isPresent()) {
+			throw new BadRequestException("Email already exists");
+		}
 
-    Optional<Company> companyOptional = companyRepository.findById(request.getCompanyId());
+		if (userRepository.findByCredentialsUsername(request.getCredentials().getUsername()).isPresent()) {
+			throw new BadRequestException("Username already exists");
+		}
 
-    if (companyOptional.isEmpty()) {
-      throw new BadRequestException("Company with ID " + request.getCompanyId() + " does not exist");
-    }
+		if (request.getCompanyId() == null) {
+			throw new BadRequestException("Company ID cannot be null");
+		}
 
-    User user = userMapper.requestDtoToEntity(request);
+		Optional<Company> companyOptional = companyRepository.findById(request.getCompanyId());
 
-    user.getCompanies().add(companyOptional.get());
-    user.setActive(true);
-    user.setStatus("PENDING");
+		if (companyOptional.isEmpty()) {
+			throw new NotFoundException("Company with ID " + request.getCompanyId() + " does not exist");
+		}
 
-    return userMapper.entityToDto(userRepository.saveAndFlush(user));
-  }
+		User user = userMapper.requestDtoToEntity(request);
+
+		user.getCompanies().add(companyOptional.get());
+		user.setActive(true);
+		user.setStatus("PENDING");
+
+		return userMapper.entityToDto(userRepository.saveAndFlush(user));
+	}
+
+	@Override
+	public UserResponseDto updateUser(Long userId) {
+		if (userId == null) {
+			throw new BadRequestException("UserId does not exsist");
+		}
+		
+		Optional<User> userToFind = userRepository.findById(userId);
+		if (userToFind.isEmpty()) {
+			throw new NotFoundException("User was not found");
+		}
+		
+		User user = userToFind.get();
+		user.setStatus("JOINED");
+		
+		return userMapper.entityToDto(userRepository.saveAndFlush(user));
+	}
 }
