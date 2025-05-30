@@ -2,7 +2,9 @@ package com.cooksys.wikiProjectAPI.controllers;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,5 +38,15 @@ public class TeamController {
   public List<TeamResponseDto> getTeamsByUser(@PathVariable Long userId) {
 	  return teamService.getTeamByUser(userId);
   }
+  
+  @PatchMapping("/{teamId}")
+  public TeamResponseDto editTeam(@PathVariable Long teamId, @RequestBody TeamRequestDto teamRequestDto) {
+	  return teamService.editTeam(teamId, teamRequestDto);
+  }
+  
+  @DeleteMapping("/{teamId}")
+  public TeamResponseDto deleteTeam(@PathVariable Long teamId) {
+	  return teamService.deleteTeam(teamId);
+  }
 
-}
+} 
