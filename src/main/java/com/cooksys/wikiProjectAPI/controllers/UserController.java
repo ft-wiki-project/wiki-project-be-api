@@ -24,7 +24,6 @@ public class UserController {
   @PostMapping("/")
   public UserResponseDto createUser(@RequestBody UserRequestDto request) {
 	  return userService.createUser(request);
-
   }
 
   @PostMapping("/login")
@@ -33,7 +32,7 @@ public class UserController {
   }
   
   @PatchMapping("/{userId}")
-  public UserResponseDto updateUser(@PathVariable Long userId) {
-	  return userService.updateUser(userId);
+  public UserResponseDto updateUser(@PathVariable Long userId, @RequestBody UserRequestDto userRequestDto) {
+	  return userService.updateUser(userId, userRequestDto);
   }
 } 
