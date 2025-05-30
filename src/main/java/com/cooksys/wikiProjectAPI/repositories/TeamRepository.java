@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.cooksys.wikiProjectAPI.entities.Company;
 import com.cooksys.wikiProjectAPI.entities.Team;
-import com.cooksys.wikiProjectAPI.entities.User;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
