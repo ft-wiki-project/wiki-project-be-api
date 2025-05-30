@@ -30,8 +30,7 @@ public class UserServiceImpl implements UserService {
 			throw new BadRequestException("Invalid login request");
 		}
 
-		Optional<User> userToBeLoggedIn = userRepository.findByCredentialsUsernameAndCredentialsPassword(
-				credentialsDto.getUsername(), credentialsDto.getPassword());
+		Optional<User> userToBeLoggedIn = userRepository.findByCredentialsUsernameAndCredentialsPassword(credentialsDto.getUsername(), credentialsDto.getPassword());
 
 		if (userToBeLoggedIn.isEmpty()) {
 			throw new BadRequestException("Invalid username or password");
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserResponseDto updateUser(Long userId) {
+	public UserResponseDto updateUser(Long userId, UserRequestDto userRequestDto) {
 		if (userId == null) {
 			throw new BadRequestException("UserId does not exsist");
 		}
@@ -92,7 +91,21 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		User user = userToFind.get();
-		user.setStatus("JOINED");
+		
+    if (userRequestDto.getProfile() != null) {
+      user.getProfile().setFirst(userRequestDto.getProfile().getFirst());
+      user.getProfile().setLast(userRequestDto.getProfile().getLast());
+      user.getProfile().setEmail(userRequestDto.getProfile().getEmail());
+      user.getProfile().setPhone(userRequestDto.getProfile().getPhone());
+      user.getCredentials().setUsername(userRequestDto.getCredentials().getUsername());
+      user.setAdmin(userRequestDto.isAdmin());
+      if (userRequestDto.getCredentials().getPassword() != null) {
+        user.getCredentials().setPassword(userRequestDto.getCredentials().getPassword());
+      }
+    } else {
+      user.setStatus("JOINED");
+    }
+    
 		
 		return userMapper.entityToDto(userRepository.saveAndFlush(user));
 	}
