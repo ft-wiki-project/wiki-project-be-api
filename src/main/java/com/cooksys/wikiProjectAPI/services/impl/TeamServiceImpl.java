@@ -1,7 +1,10 @@
 package com.cooksys.wikiProjectAPI.services.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -11,7 +14,9 @@ import com.cooksys.wikiProjectAPI.entities.Company;
 import com.cooksys.wikiProjectAPI.entities.Team;
 import com.cooksys.wikiProjectAPI.entities.User;
 import com.cooksys.wikiProjectAPI.exceptions.BadRequestException;
+import com.cooksys.wikiProjectAPI.exceptions.NotFoundException;
 import com.cooksys.wikiProjectAPI.mappers.TeamMapper;
+import com.cooksys.wikiProjectAPI.mappers.UserMapper;
 import com.cooksys.wikiProjectAPI.repositories.CompanyRepository;
 import com.cooksys.wikiProjectAPI.repositories.TeamRepository;
 import com.cooksys.wikiProjectAPI.repositories.UserRepository;
@@ -25,6 +30,7 @@ public class TeamServiceImpl implements TeamService {
 	private final TeamMapper teamMapper;
 	private final CompanyRepository companyRepository;
 	private final UserRepository userRepository;
+	private final UserMapper userMapper;
 
 	@Override
 	public TeamResponseDto createTeam(TeamRequestDto teamRequestDto) {
@@ -73,12 +79,16 @@ public class TeamServiceImpl implements TeamService {
 	public List<TeamResponseDto> getTeams(Long companyId) {
 
 		if (companyId == null) {
-			throw new BadRequestException("Company does not exsist");
+			throw new BadRequestException("Company does not exist");
 		}
 
 		Optional<Company> companyToFind = companyRepository.findById(companyId);
+		if (companyToFind.isEmpty()) {
+			throw new NotFoundException("Company not found");
+		}
+		
 
-		List<Team> teamsInCompany = companyToFind.get().getTeams();
+		List<Team> teamsInCompany = teamRepository.findAllByCompanyAndDeletedFalse(companyToFind.get());
 
 		return teamMapper.entitiesToDtos(teamsInCompany);
 
@@ -87,13 +97,72 @@ public class TeamServiceImpl implements TeamService {
 	@Override
 	public List<TeamResponseDto> getTeamByUser(Long userId) {
 		if (userId == null) {
-			throw new BadRequestException("User does not exsist");
+			throw new BadRequestException("User does not exist");
 		}
 		
 		Optional<User> userToFind = userRepository.findById(userId);
+		if (userToFind.isEmpty()) {
+			throw new NotFoundException("User not found");
+		}
 		
-		List<Team> userTeams = userToFind.get().getTeams();
+		List<Team> teams = new ArrayList<>();
+		List<Team> allUserTeams = userToFind.get().getTeams();
+		for (Team team : allUserTeams) {
+			if (!team.isDeleted()) {
+				teams.add(team);
+			}
+		}
 		
-		return teamMapper.entitiesToDtos(userTeams);
+		return teamMapper.entitiesToDtos(teams);
+	}
+
+	@Override
+	public TeamResponseDto editTeam(Long teamId, TeamRequestDto teamRequestDto) {
+		if (teamId == null) {
+	        throw new BadRequestException("Team ID must not be null");
+	    }
+
+	    Optional<Team> teamToFind = teamRepository.findById(teamId);
+	    if (teamToFind.isEmpty()) {
+	        throw new NotFoundException("Team not found");
+	    }
+
+	    Team team = teamToFind.get();
+	    team.setName(teamRequestDto.getName());
+	    
+	    team.setDescription(teamRequestDto.getDescription());
+
+	    for (Long userId : teamRequestDto.getUserIds()) {
+	    	
+	    	Optional<User> userOptional = userRepository.findById(userId);
+			if (userOptional.isEmpty()) {
+				throw new BadRequestException("User with id " + userId + " does not exist");
+			}
+			if (!team.getUsers().contains(userOptional.get())) {
+				team.getUsers().add(userOptional.get());
+				userOptional.get().getTeams().add(team);
+				userRepository.saveAndFlush(userOptional.get());
+			}
+	    }
+
+	    team = teamRepository.saveAndFlush(team);
+	    return teamMapper.entityToDto(team);
+	}
+
+	@Override
+	public TeamResponseDto deleteTeam(Long teamId) {
+		if (teamId == null) {
+	        throw new BadRequestException("Team ID must not be null");
+	    }
+
+	    Optional<Team> teamToFind = teamRepository.findById(teamId);
+	    if (teamToFind.isEmpty()) {
+	        throw new NotFoundException("Team not found");
+	    }
+	    
+	    Team team = teamToFind.get();
+	    team.setDeleted(true);
+	    return teamMapper.entityToDto(teamRepository.saveAndFlush(team));
+	    
 	}
 }

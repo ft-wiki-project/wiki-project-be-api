@@ -25,6 +25,7 @@ public class Team {
 
   private String name;
   private String description;
+  private boolean deleted = false;
 
   @ManyToMany(mappedBy = "teams")
   private List<User> users = new ArrayList<>();
