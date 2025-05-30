@@ -123,7 +123,7 @@ public class Seeder implements CommandLineRunner {
 
     Announcement announcement1 = new Announcement();
     announcement1.setTitle("Tech Lead");
-    announcement1.setMessage("We are excited to have you on board.");
+    announcement1.setMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pharetra sit amet felis id cursus. Fusce id nunc eget diam hendrerit semper a et justo. Phasellus lacinia consequat ultrices.");
     announcement1.setCompany(company1);
     announcement1.setAuthor(admin);
     company1.getAnnouncements().add(announcement1);
@@ -156,7 +156,7 @@ public class Seeder implements CommandLineRunner {
     
     Announcement announcement4 = new Announcement();
     announcement4.setTitle("CEO");
-    announcement4.setMessage("We are going to start implementing casual Fridays!!");
+    announcement4.setMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pharetra sit amet felis id cursus. Fusce id nunc eget diam hendrerit semper a et justo. Phasellus lacinia consequat ultrices.");
     announcement4.setCompany(company2);
     announcement4.setAuthor(admin);
     company2.getAnnouncements().add(announcement4);
